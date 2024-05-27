@@ -1,9 +1,11 @@
 const myLibrary = [
   {
+    id: 2,
     title: 'Solo Leveling',
     websource: 'https://komikindo.tv/komik/823197-solo-leveling/',
   },
   {
+    id: 1,
     title: 'Tower of God',
     websource: 'https://www.webtoons.com/en/fantasy/tower-of-god/list?title_no=95',
   },
@@ -15,6 +17,7 @@ function Comic({ title, websource }) {
 };
 
 function addComicToLibrary(comic) {
+  comic.id = myLibrary[0].id + 1;
   myLibrary.unshift(comic);
 }
 
@@ -40,12 +43,16 @@ function createProperty(propName, propValue) {
 
 }
 
-function createComicCard({ title, websource }) {
+function createComicCard({ id, title, websource }) {
   const comicCard = document.createElement('div');
   comicCard.classList.add('card');
 
   const cardBody = document.createElement('div');
   cardBody.classList.add('card__body');
+
+  const idProperty = createProperty('id', id);
+  idProperty.classList.add('hidden');
+  cardBody.append(idProperty);
 
   const titleProperty = createProperty('Title', title);
   cardBody.append(titleProperty);
