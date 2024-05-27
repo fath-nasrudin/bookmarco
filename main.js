@@ -1,4 +1,4 @@
-const myLibrary = [
+let myLibrary = [
   {
     id: 2,
     title: 'Solo Leveling',
@@ -19,6 +19,12 @@ function Comic({ title, websource }) {
 function addComicToLibrary(comic) {
   comic.id = myLibrary[0].id + 1;
   myLibrary.unshift(comic);
+}
+
+function deleteComicFromLibrary(comicId) {
+  comicId = Number(comicId);
+
+  myLibrary = myLibrary.filter(comic => comic.id !== comicId);
 }
 
 /************ 
@@ -46,6 +52,7 @@ function createProperty(propName, propValue) {
 function createComicCard({ id, title, websource }) {
   const comicCard = document.createElement('div');
   comicCard.classList.add('card');
+  comicCard.setAttribute('data-id', id);
 
   const cardBody = document.createElement('div');
   cardBody.classList.add('card__body');
@@ -70,6 +77,21 @@ function createComicCard({ id, title, websource }) {
   readButton.classList.add('read-button');
   readButton.textContent = 'Read Comic';
   link.append(readButton);
+
+  const deleteButton = document.createElement('button');
+  deleteButton.classList.add('js-delete-comic-button', 'delete-button');
+  deleteButton.textContent = 'Delete';
+  cardFooter.append(deleteButton);
+
+  // handling delete event
+  deleteButton.addEventListener('click', (e) => {
+    console.log(e.target);
+    const currentCard = e.target.closest('.card');
+    const cardId = currentCard.getAttribute('data-id');
+
+    deleteComicFromLibrary(cardId);
+    renderComics();
+  })
 
   comicCard.append(cardBody, cardFooter);
 

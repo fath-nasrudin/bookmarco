@@ -316,15 +316,29 @@ select {
   color: #d1d1d1;
 }
 
-.read-button {
+.card__footer {
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+}
+
+.card button {
   display: block;
   width: 100%;
   padding: 2px;
-  background-color: hsl(22, 90%, 50%);
-  border-radius: 8px;
+  border-radius: 4px;
   border: none;
   cursor: pointer;
   font-weight: 500;
+}
+
+.read-button {
+  background-color: hsl(22, 90%, 50%);
+  color: hsl(0, 0%, 100%);
+}
+
+.delete-button {
+  background-color: hsl(0, 90%, 50%);
   color: hsl(0, 0%, 100%);
 }
 
