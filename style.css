@@ -1,0 +1,421 @@
+/* fonts import */
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;700&family=Bellefair&family=Barlow:wght@400;700&display=swap');
+
+/* -------------------- */
+/* Custom Properties    */
+/* -------------------- */
+
+:root {
+  /* colors */
+  --clr-dark: 230 35% calc(var(--clr-dark-l, 7) * 1%);
+  --clr-dark-800: 230 35% 12%;
+  --clr-dark-700: 230 35% 17%;
+  --clr-light: 230 70% 90%;
+  --clr-white: 0 0% 100%;
+
+  /* font-sizes */
+  --fs-900: clamp(5rem, 8vw + 1rem, 9.735rem);
+  --fs-800: 3.5rem;
+  --fs-700: 1.5rem;
+  --fs-600: 1rem;
+  --fs-500: 1rem;
+  --fs-400: 0.9375rem;
+  --fs-300: 1rem;
+  --fs-200: 0.875rem;
+
+  /* font-families */
+  --ff-serif: "Bellefair", serif;
+  --ff-sans-cond: "Barlow Condensed", sans-serif;
+  --ff-sans-normal: "Barlow", sans-serif;
+}
+
+/* tablet and bigger */
+@media (min-width: 35em) {
+  :root {
+    --fs-800: 5rem;
+    --fs-700: 2.5rem;
+    --fs-600: 1.5rem;
+    --fs-500: 1.25rem;
+    --fs-400: 1rem;
+  }
+}
+
+/* desktop and bigger */
+@media (min-width: 45em) {
+  :root {
+    --fs-800: 6.25rem;
+    --fs-700: 3.5rem;
+    --fs-600: 2rem;
+    --fs-500: 1.75rem;
+    --fs-400: 1.125rem;
+  }
+}
+
+
+/* -------------------- */
+/* Reset                */
+/* -------------------- */
+
+/* Box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Reset margins */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+picture {
+  margin: 0;
+}
+
+/* reset the font-weight tobe normal*/
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-weight: 400;
+}
+
+/* Set up the body */
+body {
+  font-family: var(--ff-sans-normal);
+  font-size: var(--fs-400);
+  background-color: hsl(var(--clr-dark));
+  color: hsl(var(--clr-white));
+  line-height: 1.5;
+  min-height: 100vh;
+
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  /*assume that body have always 2 child, 1 for header and 1 for container*/
+  overflow-x: hidden;
+}
+
+/* make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+}
+
+img:not([hidden]),
+picture:not([hidden]) {
+  display: block;
+}
+
+/* make form elements easier to work with */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* remove animations for people who turned them off */
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+/* -------------------- */
+/* Utility classes      */
+/* -------------------- */
+
+/* ========== spacing utilities ========== */
+
+/* add margin-top except for the first child */
+/* we use  * + * instead of :first-child because it is not add any specificity */
+.flow>*+* {
+  margin-top: var(--flow-space, 1rem);
+}
+
+.flow--space-sm {
+  --flow-space: .5rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.mt-8 {
+  margin-top: 2rem;
+}
+
+.mb-8 {
+  margin-bottom: 2rem;
+}
+
+/* ========== colors utilities ========== */
+
+.bg-dark {
+  background-color: hsl(var(--clr-dark));
+}
+
+.bg-accent {
+  background-color: hsl(var(--clr-light));
+}
+
+.bg-white {
+  background-color: hsl(var(--clr-white));
+}
+
+.text-dark {
+  color: hsl(var(--clr-dark));
+}
+
+.text-accent {
+  color: hsl(var(--clr-light));
+}
+
+.text-white {
+  color: hsl(var(--clr-white));
+}
+
+/* ========== typography utilities ========== */
+
+.ff-serif {
+  font-family: var(--ff-serif);
+}
+
+.ff-sans-cond {
+  font-family: var(--ff-sans-cond);
+}
+
+.ff-sans-normal {
+  font-family: var(--ff-sans-normal);
+}
+
+.letter-spacing-1 {
+  letter-spacing: 4.75px;
+}
+
+.letter-spacing-2 {
+  letter-spacing: 2.7px;
+}
+
+.letter-spacing-3 {
+  letter-spacing: 2.35px;
+}
+
+
+.fs-900 {
+  font-size: var(--fs-900);
+}
+
+.fs-800 {
+  font-size: var(--fs-800);
+}
+
+.fs-700 {
+  font-size: var(--fs-700);
+}
+
+.fs-600 {
+  font-size: var(--fs-600);
+}
+
+.fs-500 {
+  font-size: var(--fs-500);
+}
+
+.fs-400 {
+  font-size: var(--fs-400);
+}
+
+.fs-300 {
+  font-size: var(--fs-300);
+}
+
+.fs-200 {
+  font-size: var(--fs-200);
+}
+
+.fs-900,
+.fs-800,
+.fs-700,
+.fs-600 {
+  line-height: 1.1;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+
+/* -------------------- */
+/* Components           */
+/* -------------------- */
+
+/* ========== primary-header components ========== */
+.primary-header {
+  padding: 1rem;
+  border-bottom: 1px solid hsl(var(--clr-white) / .25);
+}
+
+/* ========== card components ========== */
+.card-container {
+  padding: 1rem;
+  border-left: 1px solid hsl(var(--clr-white) / .25);
+  border-right: 1px solid hsl(var(--clr-white) / .25);
+
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  align-content: start;
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid #cccccc0f;
+  border-radius: 8px;
+  padding: 16px;
+  width: 100%;
+  --clr-dark-l: 20;
+  background-color: hsl(230 35% 12%);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.property {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.property-name {
+  color: #c6c6c6;
+}
+
+.property-value {
+  font-weight: bold;
+  color: #d1d1d1;
+}
+
+.read-button {
+  display: block;
+  width: 100%;
+  padding: 2px;
+  background-color: hsl(22, 90%, 50%);
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+  color: hsl(0, 0%, 100%);
+}
+
+.card a {
+  text-decoration: none;
+  font-weight: inherit;
+  color: inherit;
+}
+
+/* ========== bottom-menu components ========== */
+.bottom-menu {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  background-color: #221b26;
+  min-height: 24px;
+}
+
+.add-button {
+  position: absolute;
+  background-color: #221b26;
+  color: white;
+  padding-inline: 1rem;
+  border: 1px solid hsl(var(--clr-white) / .25);
+  border-radius: 4px;
+  bottom: 1rem;
+  right: 2rem;
+  cursor: pointer;
+}
+
+/* ========== modal components ========== */
+.overlay {
+  background-color: hsl(var(--clr-dark) / .5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(5px);
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  position: absolute;
+  top: 20%;
+  z-index: 2;
+  padding: 1rem;
+  margin: 1rem;
+  max-width: 400px;
+
+  background-color: hsl(var(--clr-dark));
+}
+
+.modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.modal .form-control {
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal .form-control>input {
+  max-width: 60%;
+  border-radius: 6px;
+  padding-inline: .5rem;
+  border: transparent;
+  background-color: hsl(230 35% 15%);
+  color: hsl(230 35% 100%)
+}
+
+.modal .form-control>input::placeholder {
+  color: hsl(230 50% 80%)
+}
+
+.modal button {
+  cursor: pointer;
+}
+
+/* ========== visibility utilities ========== */
+/* need to fix: the cascade, not working when place on utility classes  */
+.hidden {
+  display: none;
+}

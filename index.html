@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookmarco</title>
+    <script src="./main.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+  </head>
+
+  <body id="root">
+    <header class="primary-header mb-4">
+      <div class="logo fs-700 fw">BOOKMARCO</div>
+    </header>
+
+    <div id="comicsContainer" class="card-container">
+      <!-- <div class="card">
+        <div class="card__body">
+          <div class="property">
+            <div class="property-name">Title</div>
+            <div class="property-value">Tower Of God</div>
+          </div>
+        </div>
+        <div class="card__footer mt-4">
+          <a target="_blank" href="https://komiku.com/manga/240524-solo-leveling/">
+            <button class="read-button">Read</button>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__body">
+          <div class="property">
+            <div class="property-name">Title</div>
+            <div class="property-value">Solo Leveling</div>
+          </div>
+          <div class="card__footer  mt-4">
+            <a target="_blank" href="https://komiku.com/manga/240524-solo-leveling/">
+              <button class="read-button">Read</button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__body">
+          <div class="property">
+            <div class="property-name">Title</div>
+            <div class="property-value">Tower Of God</div>
+          </div>
+        </div>
+        <div class="card__footer mt-4">
+          <a target="_blank" href="https://komiku.com/manga/240524-solo-leveling/">
+            <button class="read-button">Read</button>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__body">
+          <div class="property">
+            <div class="property-name">Title</div>
+            <div class="property-value">Solo Leveling</div>
+          </div>
+          <div class="card__footer  mt-4">
+            <a target="_blank" href="https://komiku.com/manga/240524-solo-leveling/">
+              <button class="read-button">Read</button>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card__body">
+          <div class="property">
+            <div class="property-name">Title</div>
+            <div class="property-value">Tower Of God</div>
+          </div>
+        </div>
+        <div class="card__footer mt-4">
+          <a target="_blank" href="https://komiku.com/manga/240524-solo-leveling/">
+            <button class="read-button">Read</button>
+          </a>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card__body">
+          <div class="property">
+            <div class="property-name">Title</div>
+            <div class="property-value">Solo Leveling</div>
+          </div>
+          <div class="card__footer  mt-4">
+            <a target="_blank" href="https://komiku.com/manga/240524-solo-leveling/">
+              <button class="read-button">Read</button>
+            </a>
+          </div>
+        </div>
+      </div> -->
+    </div>
+
+    <!-- modal -->
+    <div style="display: flex; justify-content: center;">
+      <section class="modal  js-add-comic-modal hidden">
+        <form class="js-add-comic-form">
+          <div class="form-control">
+            <label class="form-label" for="title">Title</label>
+            <input type="text" name="title" id="title" placeholder="Comic Title">
+          </div>
+
+          <div class="form-control">
+            <label for="websource">Web Source</label>
+            <input type="text" name="websource" id="websource" placeholder="https://example.com/link/to-comic-url">
+          </div>
+
+          <button type="submit" class="add-comic-form-button">Add</button>
+        </form>
+      </section>
+    </div>
+    <div class="overlay js-add-comic-modal-overlay hidden"></div>
+
+    <div class="mb-8"></div>
+    <div class="bottom-menu">
+      <button class="js-add-button add-button">
+        Add
+      </button>
+    </div>
+  </body>
+
+</html>
