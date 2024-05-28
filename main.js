@@ -31,6 +31,20 @@ function deleteComicFromLibrary(comicId) {
   myLibrary = myLibrary.filter(comic => comic.id !== comicId);
 }
 
+function editComic(comicId, data) {
+  // find comic
+  const currentComic = myLibrary.find(comic => comic.id === Number(comicId));
+
+  if (!currentComic) {
+    console.log('Comic not found');
+    return;
+  }
+
+  // apply change
+  if (data.title !== undefined) currentComic.title = data.title;
+  if (data.websource !== undefined) currentComic.websource = data.websource;
+}
+
 /************ 
  * UI       *
  ************/
@@ -82,10 +96,14 @@ function createComicCard({ id, title, websource }) {
   readButton.textContent = 'Read Comic';
   link.append(readButton);
 
+  const editAndDeleteWrapper = document.createElement('div');
+  editAndDeleteWrapper.setAttribute('style', 'display: flex; gap: 8px;')
+  cardFooter.append(editAndDeleteWrapper);
+
+
   const deleteButton = document.createElement('button');
   deleteButton.classList.add('js-delete-comic-button', 'delete-button');
   deleteButton.textContent = 'Delete';
-  cardFooter.append(deleteButton);
 
   // handling delete event
   deleteButton.addEventListener('click', (e) => {
@@ -96,6 +114,18 @@ function createComicCard({ id, title, websource }) {
     deleteComicFromLibrary(cardId);
     renderComics();
   })
+
+  const editButton = document.createElement('button');
+  editButton.classList.add('js-edit-comic-button', 'edit-button');
+  editButton.textContent = 'Edit';
+  editButton.addEventListener('click', (e) => {
+    const currentCard = e.target.closest('.card');
+    const cardId = currentCard.getAttribute('data-id');
+    const comic = findComicById(cardId);
+    renderModal({ type: 'edit', comic })
+  })
+
+  editAndDeleteWrapper.append(editButton, deleteButton);
 
   comicCard.append(cardBody, cardFooter);
 

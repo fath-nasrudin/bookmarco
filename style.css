@@ -342,6 +342,11 @@ select {
   color: hsl(0, 0%, 100%);
 }
 
+.edit-button {
+  background-color: hsl(230, 90%, 50%);
+  color: hsl(0, 0%, 100%);
+}
+
 .card a {
   text-decoration: none;
   font-weight: inherit;
