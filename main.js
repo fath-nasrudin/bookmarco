@@ -90,9 +90,47 @@ function editComic(comicId, data) {
   writeDatabase(myLibrary);
 }
 
+function updateComicLastVisited(comicId) {
+  const myLibrary = readDatabase();
+
+  // find comic
+  const currentComic = myLibrary.find(comic => comic.id === Number(comicId));
+
+  if (!currentComic) {
+    console.log('Comic not found');
+    return;
+  }
+
+  // apply change
+  currentComic.lastVisited = new Date();
+
+  writeDatabase(myLibrary);
+}
+
+
 /************ 
  * UI       *
  ************/
+
+
+function getLastVisitedString(lastVisited) {
+  const dateString = new Date(Date.now()).toDateString()
+
+  if (!lastVisited) return 'Never';
+
+  const lastVisitedTimestamps = new Date(lastVisited); // last visited
+  const todayTimestamps = new Date(dateString).getTime(); // hari ini
+  const deltaInMiliseconds = lastVisitedTimestamps - todayTimestamps;
+  const deltaInHours = (((deltaInMiliseconds / 1000) / 60) / 60);
+
+  let result = lastVisitedTimestamps.toDateString();
+  if (todayTimestamps < lastVisitedTimestamps) {
+    result = 'Today';
+  } else if (todayTimestamps > lastVisitedTimestamps) {
+    if (deltaInHours > -24) result = 'Yesterday';
+  }
+  return result;
+}
 
 function createProperty(propName, propValue) {
   const property = document.createElement('div');
@@ -112,7 +150,7 @@ function createProperty(propName, propValue) {
 
 }
 
-function createComicCard({ id, title, websource }) {
+function createComicCard({ id, title, websource, lastVisited }) {
   const comicCard = document.createElement('div');
   comicCard.classList.add('card');
   comicCard.setAttribute('data-id', id);
@@ -127,6 +165,10 @@ function createComicCard({ id, title, websource }) {
   const titleProperty = createProperty('Title', title);
   cardBody.append(titleProperty);
 
+  const lastVisitedString = getLastVisitedString(lastVisited);
+  const lastVisitedProperty = createProperty('Last Visited', lastVisitedString);
+  cardBody.append(lastVisitedProperty);
+
 
   const cardFooter = document.createElement('div');
   cardFooter.classList.add('card__footer', 'mt-4');
@@ -139,6 +181,12 @@ function createComicCard({ id, title, websource }) {
   const readButton = document.createElement('button');
   readButton.classList.add('read-button');
   readButton.textContent = 'Read Comic';
+
+  readButton.addEventListener('click', (e) => {
+    updateComicLastVisited(id);
+    renderComics();
+  })
+
   link.append(readButton);
 
   const editAndDeleteWrapper = document.createElement('div');
