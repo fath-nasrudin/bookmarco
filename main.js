@@ -11,27 +11,70 @@ let myLibrary = [
   },
 ];
 
+/************ 
+ * Database *
+ ************/
+// add myLibrary if the data is yet populated
+const LIBRARY_KEY = 'mylibrary';
+function writeDatabase(data = myLibrary) {
+  const flatenLibrary = JSON.stringify(data);
+  localStorage.setItem(LIBRARY_KEY, flatenLibrary);
+}
+
+function readDatabase() {
+  const myLibrary = JSON.parse(localStorage.getItem(LIBRARY_KEY));
+  return myLibrary;
+}
+
+if (!localStorage.getItem('mylibrary')) {
+  writeDatabase(myLibrary);
+}
+
+/************ 
+ * Model    *
+ ************/
 function Comic({ title, websource }) {
   this.title = title;
   this.websource = websource;
 };
 
+
 function addComicToLibrary(comic) {
+
+  // read database
+  const myLibrary = readDatabase();
+
+  // update
   comic.id = myLibrary[0].id + 1;
   myLibrary.unshift(comic);
+
+  // write database
+  writeDatabase(myLibrary);
+}
+
+function findComics() {
+  const myLibrary = readDatabase();
+  return myLibrary;
 }
 
 function findComicById(comicId) {
+  const myLibrary = readDatabase();
   return myLibrary.find(comic => comic.id === Number(comicId));
 }
 
 function deleteComicFromLibrary(comicId) {
   comicId = Number(comicId);
 
+  let myLibrary = readDatabase();
+
   myLibrary = myLibrary.filter(comic => comic.id !== comicId);
+
+  writeDatabase(myLibrary);
 }
 
 function editComic(comicId, data) {
+  const myLibrary = readDatabase();
+
   // find comic
   const currentComic = myLibrary.find(comic => comic.id === Number(comicId));
 
@@ -43,6 +86,8 @@ function editComic(comicId, data) {
   // apply change
   if (data.title !== undefined) currentComic.title = data.title;
   if (data.websource !== undefined) currentComic.websource = data.websource;
+
+  writeDatabase(myLibrary);
 }
 
 /************ 
@@ -214,6 +259,9 @@ function renderComics() {
 
   // reset previus data
   comicsContainer.textContent = '';
+
+  // get comics
+  const myLibrary = findComics();
 
   for (let i = 0; i < myLibrary.length; i++) {
     comicsContainer.append(createComicCard(myLibrary[i]));
