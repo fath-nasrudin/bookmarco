@@ -98,6 +98,77 @@ function createComicCard({ id, title, websource }) {
   return comicCard;
 }
 
+function createModal() {
+  const modalWrapper = document.createElement('div');
+  modalWrapper.classList.add('js-modal-wrapper');
+  modalWrapper.setAttribute('style', 'display: flex; justify-content: center;');
+
+  const dialog = document.createElement('section');
+  dialog.classList.add('js-add-comic-modal', 'modal');
+
+  const form = document.createElement('form');
+  form.classList.add('js-add-comic-form');
+  dialog.append(form);
+
+  // title
+  const titleFormControl = document.createElement('div');
+  titleFormControl.classList.add('form-control');
+
+  const titleLabel = document.createElement('label');
+  titleLabel.classList.add('form-control');
+  titleLabel.htmlFor = 'title';
+  titleLabel.textContent = 'Title';
+
+  const titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.name = 'title';
+  titleInput.id = 'title';
+  titleInput.placeholder = 'Comic Title';
+
+  titleFormControl.append(titleLabel, titleInput);
+
+  // websource
+  const websourceFormControl = document.createElement('div');
+  websourceFormControl.classList.add('form-control');
+
+  const websourceLabel = document.createElement('label');
+  websourceLabel.classList.add('form-control');
+  websourceLabel.htmlFor = 'websource';
+  websourceLabel.textContent = 'Websource';
+
+  const websourceInput = document.createElement('input');
+  websourceInput.type = 'text';
+  websourceInput.name = 'websource';
+  websourceInput.id = 'websource';
+  websourceInput.placeholder = 'Comic Websource';
+
+  websourceFormControl.append(websourceLabel, websourceInput);
+
+  const saveButton = document.createElement('button');
+  saveButton.type = 'submit';
+  saveButton.classList.add('save-comic-form-button');
+  saveButton.textContent = 'Save';
+
+  // handling add comic form
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formData = Object.fromEntries(new FormData(e.target).entries());
+
+    addComicToLibrary(formData);
+    removeModal();
+    renderComics();
+
+  })
+
+  form.append(titleFormControl, websourceFormControl, saveButton);
+
+  const overlay = document.createElement('div');
+  overlay.classList.add('js-add-comic-modal-overlay', 'overlay');
+
+  modalWrapper.append(dialog, overlay);
+  return modalWrapper;
+}
+
 function renderComics() {
   const comicsContainer = document.querySelector('#comicsContainer');
 
@@ -110,29 +181,18 @@ function renderComics() {
 
 }
 
-const toggleAddComicModal = () => {
-  const addComicModal = document.querySelector('.js-add-comic-modal');
-  const addComicOverlay = document.querySelector('.js-add-comic-modal-overlay');
+const removeModal = () => {
+  const modalWrapper = document.querySelector('.js-modal-wrapper');
+  document.body.removeChild(modalWrapper);
+}
 
-  addComicModal.classList.toggle('hidden');
-  addComicOverlay.classList.toggle('hidden');
+const renderModal = () => {
+  document.querySelector('body').append(createModal());
 }
 
 const addButton = document.querySelector('.js-add-button');
 addButton.addEventListener('click', () => {
-  toggleAddComicModal();
-})
-
-// handling add comic form
-document.querySelector('.js-add-comic-form').addEventListener('submit', (e) => {
-  e.preventDefault();
-
-  const formData = Object.fromEntries(new FormData(e.target).entries());
-
-  addComicToLibrary(formData);
-  toggleAddComicModal();
-  renderComics();
-
+  renderModal();
 })
 
 // initial loaded
