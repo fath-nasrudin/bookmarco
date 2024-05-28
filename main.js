@@ -21,6 +21,10 @@ function addComicToLibrary(comic) {
   myLibrary.unshift(comic);
 }
 
+function findComicById(comicId) {
+  return myLibrary.find(comic => comic.id === Number(comicId));
+}
+
 function deleteComicFromLibrary(comicId) {
   comicId = Number(comicId);
 
