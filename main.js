@@ -102,7 +102,7 @@ function createComicCard({ id, title, websource }) {
   return comicCard;
 }
 
-function createModal() {
+function createModal({ type = 'add', comic }) {
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('js-modal-wrapper');
   modalWrapper.setAttribute('style', 'display: flex; justify-content: center;');
@@ -128,6 +128,7 @@ function createModal() {
   titleInput.name = 'title';
   titleInput.id = 'title';
   titleInput.placeholder = 'Comic Title';
+  titleInput.value = type === 'edit' ? comic.title : '';
 
   titleFormControl.append(titleLabel, titleInput);
 
@@ -145,6 +146,7 @@ function createModal() {
   websourceInput.name = 'websource';
   websourceInput.id = 'websource';
   websourceInput.placeholder = 'Comic Websource';
+  websourceInput.value = type === 'edit' ? comic.websource : '';
 
   websourceFormControl.append(websourceLabel, websourceInput);
 
@@ -153,15 +155,19 @@ function createModal() {
   saveButton.classList.add('save-comic-form-button');
   saveButton.textContent = 'Save';
 
-  // handling add comic form
+  // handling saving comic
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const formData = Object.fromEntries(new FormData(e.target).entries());
 
-    addComicToLibrary(formData);
+    if (type === 'add') {
+      addComicToLibrary(formData);
+    } else if (type === 'edit') {
+      editComic(comic.id, formData);
+    }
+
     removeModal();
     renderComics();
-
   })
 
   form.append(titleFormControl, websourceFormControl, saveButton);
@@ -190,8 +196,11 @@ const removeModal = () => {
   document.body.removeChild(modalWrapper);
 }
 
-const renderModal = () => {
-  document.querySelector('body').append(createModal());
+const renderModal = (options) => {
+  if (!options) options = {};
+  const { type, comic } = options;
+
+  document.querySelector('body').append(createModal({ type, comic }));
 }
 
 const addButton = document.querySelector('.js-add-button');
