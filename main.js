@@ -132,7 +132,7 @@ function getLastVisitedString(lastVisited) {
   return result;
 }
 
-function createProperty(propName, propValue) {
+function createProperty(propName, propValue, propSubvalue = null) {
   const property = document.createElement('div');
   property.classList.add('property');
 
@@ -144,13 +144,23 @@ function createProperty(propName, propValue) {
   const propertyValue = document.createElement('div');
   propertyValue.classList.add('property-value');
   propertyValue.textContent = propValue;
-  property.appendChild(propertyValue);
 
+  if (propSubvalue) {
+    const wrapper = document.createElement('div');
+    wrapper.setAttribute('style', 'display: flex; gap: .5rem;')
+
+    const propertySubvalue = document.createElement('div');
+    propertySubvalue.classList.add('property-value');
+    propertySubvalue.textContent = ` | ${propSubvalue}`;
+    wrapper.append(propertyValue, propertySubvalue);
+    property.append(wrapper);
+  } else {
+    property.appendChild(propertyValue);
+  }
   return property;
-
 }
 
-function createComicCard({ id, title, websource, lastVisited }) {
+function createComicCard({ id, title, websource, lastVisited, schedule, day, date }) {
   const comicCard = document.createElement('div');
   comicCard.classList.add('card');
   comicCard.setAttribute('data-id', id);
@@ -168,6 +178,13 @@ function createComicCard({ id, title, websource, lastVisited }) {
   const lastVisitedString = getLastVisitedString(lastVisited);
   const lastVisitedProperty = createProperty('Last Visited', lastVisitedString);
   cardBody.append(lastVisitedProperty);
+
+  let scheduleSubvalue = null;
+  if (schedule === 'weekly') scheduleSubvalue = dayOptions.find(optionDay => Number(day) === Number(optionDay.value)).name;
+  if (schedule === 'monthly') scheduleSubvalue = date;
+
+  const scheduleProperty = createProperty('Schedule', schedule ? schedule : ' Not specified', scheduleSubvalue);
+  cardBody.append(scheduleProperty);
 
 
   const cardFooter = document.createElement('div');
