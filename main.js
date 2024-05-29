@@ -110,6 +110,128 @@ function updateComicLastVisited(comicId) {
   writeDatabase(myLibrary);
 }
 
+function getApproximatelyUnreadChapters(lastVisited, updateSchedule) {
+  if (!lastVisited) return 'Not known';
+  if (!updateSchedule) return 'Not known';
+  if (!updateSchedule.type) return 'Not known';
+  if (updateSchedule.type === 'random') return 'Not known';
+
+  function getPrevDateWithSameDay(day) {
+    function getDeltaDays(day, currentDay = null) {
+      day = Number(day);
+      if (!currentDay) currentDay = new Date().getDay();
+
+      let deltaDays = 0;
+      while (currentDay - day !== 0) {
+        if (currentDay < day) {
+          deltaDays += currentDay + 1;
+          currentDay = 6;
+        } else if (currentDay > day) {
+          deltaDays += currentDay - day;
+          currentDay = day;
+        }
+      }
+
+      return deltaDays;
+    }
+
+    let currentDate = new Date();
+
+    const deltaInDays = getDeltaDays(day);
+    const deltaDaysInMiliseconds = deltaInDays * 24 * 60 * 60 * 1000;
+    const prevDate = currentDate - deltaDaysInMiliseconds;
+
+    return new Date(prevDate);
+  }
+
+  lastVisited = new Date(lastVisited);
+  const today = new Date(Date.now());
+  let result = 0;
+
+  // weekly case
+  if (updateSchedule.type === 'weekly') {
+    const prevDate = getPrevDateWithSameDay(updateSchedule.day);
+    const lastUpdate = prevDate;
+    const deltaInMiliseconds = lastVisited - lastUpdate;
+    const deltaInHours = (((deltaInMiliseconds / 1000) / 60) / 60);
+    const deltaInDays = Math.abs(Math.floor(deltaInHours / 24));
+    const totalWeek = Math.floor(deltaInDays / 7);
+
+    // return { lastUpdate, lastVisited, deltaInDays, totalWeek };
+    result = totalWeek;
+  }
+
+  // monthly case
+  if (updateSchedule.type === 'monthly') {
+    let total = 0;
+    const lastVisitedData = {
+      year: lastVisited.getFullYear(),
+      month: lastVisited.getMonth(),
+      date: lastVisited.getDate(),
+    }
+
+    const todayData = {
+      year: today.getFullYear(),
+      month: today.getMonth(),
+      date: today.getDate(),
+    }
+
+    let deltaYear = todayData.year - lastVisitedData.year;
+
+    // jika terakhir kali baca lebih dari setahun yang lalu
+    if (deltaYear > 1) {
+      total += (deltaYear - 1) * 12;
+      deltaYear = 1;
+    }
+
+    // jika tahun terakhir baca sama tahun saat ini beda 1 tahun
+    if (deltaYear === 1) {
+      // tahun sebelumnya
+      // +1 because the month lastVisited month is counted;
+      // -1 karena lastvisitedmonth belum tentu termasuk atau tidak.
+      total += (12 - lastVisitedData.month);
+
+      // tahun setelahnya
+      // -1 karena todaymonth belum tentu termasuk atau tidak.
+      total += todayData.month - 1;
+    }
+
+    // jika terakhir kali baca ada di tahun yang sama
+    if (deltaYear === 0) {
+      let deltaMonth = todayData.month - lastVisitedData.month;
+
+      if (deltaMonth > 1) {
+        // ditambah 1 karena bulan awal dihitung juga
+        // dikurangi 2 karena bulan pertama sama bulan terakhir belum tentu masuk
+        total += deltaMonth + 1 - 2;
+
+        // handle bulan pertama sama bulan terakhir
+        // jika tanggal terakhir kali baca lebih kecil dari jadwal update, tambah 1
+        if (lastVisitedData.date < updateSchedule.date) total += 1;
+        // jika bulan ini jadwal update lebih kecil dari tanggal sekarang, tambah 1
+        if (updateSchedule.date <= todayData.date) total += 1;
+
+      } else if (deltaMonth === 1) {
+        // jika terakhir baca 1 bulan yang lalu
+        // jika bulan lalu terakhir baca lebih kecil dari jadwal update, tambah 1
+        if (lastVisitedData.date < updateSchedule.date) total += 1;
+        // jika bulan ini jadwal update lebih kecil dari tanggal sekarang, tambah 1
+        if (updateSchedule.date <= todayData.date) total += 1;
+      } else if (deltaMonth === 0) {
+        // jika terakhir baca masih di bulan yang sama
+        // jika terakhir kali baca lebih kecil dari jadwal update, dan jadwal update lebih kecil dari tanggal saat ini, maka tambah 1
+        if (lastVisitedData.date < updateSchedule.date
+          && updateSchedule.date <= todayData.date) {
+          total += 1;
+        }
+      }
+    }
+
+    result = total;
+  }
+  return result;
+}
+
 
 /************ 
  * UI       *
@@ -189,6 +311,14 @@ function createComicCard({ id, title, websource, lastVisited, schedule, day, dat
   const scheduleProperty = createProperty('Schedule', schedule ? schedule : ' Not specified', scheduleSubvalue);
   cardBody.append(scheduleProperty);
 
+  const updateScheduleData = {
+    type: schedule,
+    day: schedule === 'weekly' ? day : null,
+    date: schedule === 'monthly' ? date : null,
+  }
+  const totalUnreadChapters = getApproximatelyUnreadChapters(lastVisited, updateScheduleData)
+  const chaptersUnreadProperty = createProperty('Unread Chapters', totalUnreadChapters);
+  cardBody.append(chaptersUnreadProperty)
 
   const cardFooter = document.createElement('div');
   cardFooter.classList.add('card__footer', 'mt-4');
