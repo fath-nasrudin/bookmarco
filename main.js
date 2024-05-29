@@ -86,6 +86,9 @@ function editComic(comicId, data) {
   // apply change
   if (data.title !== undefined) currentComic.title = data.title;
   if (data.websource !== undefined) currentComic.websource = data.websource;
+  if (data.schedule !== undefined) currentComic.schedule = data.schedule;
+  if (data.date !== undefined) currentComic.date = data.date;
+  if (data.day !== undefined) currentComic.day = data.day;
 
   writeDatabase(myLibrary);
 }
