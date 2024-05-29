@@ -225,6 +225,43 @@ function createComicCard({ id, title, websource, lastVisited }) {
   return comicCard;
 }
 
+function createFormControlSelect({ name, options }) {
+  const formControl = document.createElement('div');
+  formControl.classList.add('form-control');
+
+  const label = document.createElement('label');
+  label.classList.add('form-control');
+  label.htmlFor = name;
+  label.textContent = name[0].toUpperCase() + name.slice(1);
+
+  const select = document.createElement('select');
+  select.name = name;
+  select.id = name;
+
+  for (let i = 0; i < options.length; i++) {
+    const option = document.createElement('option');
+    option.value = options[i].value;
+    option.textContent = options[i].name;
+    select.append(option);
+  }
+
+  formControl.append(label, select);
+  return formControl;
+}
+
+const dateOptions = (() => {
+  const dates = [];
+  for (let i = 1; i <= 31; i++) {
+    dates.push({ name: i, value: i })
+  }
+  return dates;
+})();
+
+const dayOptions = [{ name: 'Sunday', value: 0 }, { name: 'Monday', value: 1 }, { name: 'Tuesday', value: 2 }, { name: 'Wednesday', value: 3 }, { name: 'Thursday', value: 4 }, { name: 'Friday', value: 5 }, { name: 'Saturday', value: 6 },];
+
+const scheduleOptions = [{ name: 'not specified', value: '' }, { name: 'random', value: 'random' }, { name: 'weekly', value: 'weekly' }, { name: 'monthly', value: 'monthly' },];
+
+
 function createModal({ type = 'add', comic }) {
   const modalWrapper = document.createElement('div');
   modalWrapper.classList.add('js-modal-wrapper');
@@ -273,6 +310,32 @@ function createModal({ type = 'add', comic }) {
 
   websourceFormControl.append(websourceLabel, websourceInput);
 
+  // schedule
+  const dayFormControl = createFormControlSelect({ name: 'day', options: dayOptions });
+
+  const dateFormControl = createFormControlSelect({ name: 'date', options: dateOptions });
+
+  const scheduleFormControl = createFormControlSelect({ name: 'schedule', options: scheduleOptions });
+  scheduleFormControl.querySelector('select').addEventListener('change', scheduleChangeHandler)
+
+  function scheduleChangeHandler(e) {
+    if (e.target.value === 'weekly') {
+      scheduleFormControl.after(dayFormControl);
+    } else {
+      if (dayFormControl.parentNode) {
+        dayFormControl.parentNode.removeChild(dayFormControl);
+      }
+    }
+
+    if (e.target.value === 'monthly') {
+      scheduleFormControl.after(dateFormControl);
+    } else {
+      if (dateFormControl.parentNode) {
+        dateFormControl.parentNode.removeChild(dateFormControl);
+      }
+    }
+  };
+
   const saveButton = document.createElement('button');
   saveButton.type = 'submit';
   saveButton.classList.add('save-comic-form-button');
@@ -293,7 +356,7 @@ function createModal({ type = 'add', comic }) {
     renderComics();
   })
 
-  form.append(titleFormControl, websourceFormControl, saveButton);
+  form.append(titleFormControl, websourceFormControl, scheduleFormControl, saveButton);
 
   const overlay = document.createElement('div');
   overlay.classList.add('js-add-comic-modal-overlay', 'overlay');
